@@ -13,7 +13,7 @@
             <label class="col-sm-2 control-label" for="profile">Profile</label>
             <div class="col-sm-10">
                 <div class="input-group">
-                    <input ng-model="searchedProfile" id="profile" type="text" placeholder="Enter a git hub profile" class="form-control"/>
+                    <input ng-model="searchedProfile" id="profile" type="text" placeholder="Enter a git hub profile to analyser" class="form-control"/>
                     <span class="input-group-btn">
                         <button ng-click="search()" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
                     </span>
@@ -21,13 +21,20 @@
             </div>
         </div>
     </form>
-    <hr>
-    <span>{{preferredLanguage}}</span>
-    <ul class="unstyled">
-        <li ng-repeat="repo in repos">
-            <strong>{{repo.name}}</strong>: {{repo.language}}
-        </li>
-    </ul>
+    <hr ng-if="preferredLanguage">   
+    <div ng-if="preferredLanguage">
+        <div class="alert alert-info">{{profile}}'s' preferred language is <strong>{{preferredLanguage}}</strong></div>
+        <ul ng-if="repos && repos.length" class="list-group">
+            <li ng-repeat="repo in repos" class="list-group-item">
+                <span class="pull-right">{{repo.language}}</span>
+                <strong>{{repo.name}}</strong> 
+            </li>
+        </ul>
+        <div ng-if="!repos || !repos.length" class="alert alert-warning">No repo for this user</div>
+    </div>
+    <div ng-if="error" class="alert alert-danger">
+       {{error}}
+    </div>
 </div>
 </body>
 </html>

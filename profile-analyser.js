@@ -5,7 +5,9 @@ function GithubCtrl($scope, $http) {
         $scope.repos = [];
         $scope.profileLanguages = {}
         $scope.preferredLanguage = ''
+        $scope.error = ''
         if(!$scope.searchedProfile) {
+            $scope.error = 'No user to look for. Please enter a profile name.';
             return;
         }
         $http.get('https://api.github.com/users/' + $scope.searchedProfile + '/repos')
@@ -27,13 +29,10 @@ function GithubCtrl($scope, $http) {
                 }
                 if(!$scope.preferredLanguage) {
                     $scope.preferredLanguage = 'undefined';
-                }
-                $scope.preferredLanguage = $scope.searchedProfile + "'s preferred language is " + $scope.preferredLanguage + ' according to these repos:'; 
+                } 
             })
-            .error(function () {
-                /* errors could be better handled. preferredLanguage is not supposed to be used for an error message */
-                $scope.preferredLanguage = 'impossible to find the profile: ' + $scope.searchedProfile;
+            .error(function (err) {
+                $scope.error = err.message;
             });
     }
 }
-
