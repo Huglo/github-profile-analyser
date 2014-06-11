@@ -6,8 +6,10 @@ function GithubCtrl($scope, $http) {
         $scope.profileLanguages = {}
         $scope.preferredLanguage = ''
         $scope.error = ''
+        $scope.waitLoading = true;
         if(!$scope.searchedProfile) {
             $scope.error = 'No user to look for. Please enter a profile name.';
+            $scope.waitLoading = false;
             return;
         }
         $http.get('https://api.github.com/users/' + $scope.searchedProfile + '/repos')
@@ -18,6 +20,7 @@ function GithubCtrl($scope, $http) {
                 $scope.profile = $scope.searchedProfile;
                 for(var i=0; i<data.length; i++) {
                     $scope.repos[i] = data[i];
+                    $scope.repos[i].language = $scope.repos[i].language || 'undefined';
                     var lang = $scope.repos[i].language;
                     $scope.profileLanguages[lang] = $scope.profileLanguages[lang] ? $scope.profileLanguages[lang] + 1 : 1;
                     if($scope.profileLanguages[lang] > count) {
@@ -27,12 +30,12 @@ function GithubCtrl($scope, $http) {
                         $scope.preferredLanguage += ' or ' + lang;
                     }
                 }
-                if(!$scope.preferredLanguage) {
-                    $scope.preferredLanguage = 'undefined';
-                } 
             })
             .error(function (err) {
                 $scope.error = err.message;
+            })
+            .finally(function() {
+                $scope.waitLoading = false;
             });
     }
 }

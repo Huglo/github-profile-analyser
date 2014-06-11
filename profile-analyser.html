@@ -21,17 +21,19 @@
             </div>
         </div>
     </form>
-    <hr ng-if="preferredLanguage">   
-    <div ng-if="preferredLanguage">
-        <div class="alert alert-info">{{profile}}'s' preferred language is <strong>{{preferredLanguage}}</strong></div>
+    <div ng-if="waitLoading" class="alert alert-info">
+        Loading. Please wait...
+    </div>
+    <div ng-if="profile && repos && repos.length">
+        <div class="alert alert-success">{{profile}}'s preferred language is <strong>{{preferredLanguage}}</strong></div>
         <ul ng-if="repos && repos.length" class="list-group">
             <li ng-repeat="repo in repos" class="list-group-item">
                 <span class="pull-right">{{repo.language}}</span>
                 <strong>{{repo.name}}</strong> 
             </li>
         </ul>
-        <div ng-if="!repos || !repos.length" class="alert alert-warning">No repo for this user</div>
     </div>
+    <div ng-if="profile && (!repos || !repos.length)" class="alert alert-warning">No repo for this user, we cannot tell what is his favourite language.</div>
     <div ng-if="error" class="alert alert-danger">
        {{error}}
     </div>
